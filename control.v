@@ -7,9 +7,11 @@ input jump,
 input gen,
 input lose,
 input pause,
-input reset
-);
+input reset,
 
+
+output reg ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause
+);
 
 reg [5:0] currentState, nextState;
 
@@ -64,29 +66,60 @@ reg [5:0] currentState, nextState;
 	
 	always@(*)
 	begin: outputLogic
-		
+		ld_menu = 1'b0;
+		ld_score = 1'b0;
+		ld_play = 1'b0;
+		reset_game = 1'b0;
+		load_game = 1'b0;
+		ld_generate = 1'b0;
+		ld_game = 1'b0;
+		calc_jump = 1'b0;
+		create_obs = 1'b0;
+		calc_hs = 1'b0;
+		ld_pause = 1'b0;
 		case (currentState)
 			MENU: begin
+				ld_menu = 1'b1;
 				end
+				
 			S_PLAY: begin
+				ld_play = 1'b1;
 				end
+				
 			S_RESET: begin
+				reset_game = 1'b1;
 				end
+				
 			S_LOAD: begin
+				load_game = 1'b1;
 				end
+				
 			S_GENERATE_SCREEN: begin
+				ld_generate = 1'b1;
 				end
+				
 			S_GAME: begin
+				ld_game = 1'b1;
 				end
+				
 			S_JUMP: begin
+				calc_jump = 1'b1;
 				end
+				
 			S_OBSTACLE: begin
+				create_obs = 1'b1;
 				end
+				
 			S_PAUSE: begin
+				ld_pause = 1'b1;
 				end
+				
 			S_CALC_HS: begin
+				calc_hs = 1'b1;
 				end
+				
 			S_SCORE: begin
+				ld_score = 1'b1;
 				end
 		endcase
 		
