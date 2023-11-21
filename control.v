@@ -1,3 +1,4 @@
+
 module control(
 input Clock,
 input viewScore,
