@@ -16,10 +16,10 @@ output reg ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_ga
 
 reg [5:0] currentState, nextState;
 
-	localparam  MENU	       		   = 5'd0,
-					S_SCORE		   		= 5'd1,
-					S_PLAY		 		   = 5'd2,
-					S_RESET		 		   = 5'd3,
+	localparam  MENU	       		 		= 5'd0,
+					S_SCORE		   			= 5'd1,
+					S_PLAY		 		    = 5'd2,
+					S_RESET		 		    = 5'd3,
 					S_LOAD					= 5'd4,
 					S_GENERATE_SCREEN		= 5'd5,
 					s_GAME					= 5'd6,
