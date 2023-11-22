@@ -3,11 +3,13 @@ module keyboard(
 	input wire clk,
 	input wire PS2C,
 	input wire PS2D,
-	input wire[10:0] data,
 	input start,
 	input parity,
 	input stop,
-	input resetN
+	input resetN,
+
+	output reg[7:0] heldData, pressedData,
+	output reg[10:0] data
 	);
 	
 	reg[7:0] currentData, prevData, heldData, pressedData;
