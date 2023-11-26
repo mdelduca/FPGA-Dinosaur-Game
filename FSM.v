@@ -231,7 +231,9 @@ module KBDatapath #(
 	reg [7:0] counter;
 	reg[$clog2(CLOCK_FREQUENCY):0] elTime;
 
-	//Keyboard input handler
+	//Keyboard input handlers
+	
+	// Jumping
 	always@(posedge Clock)
 	begin
 		if (!reset) begin
@@ -242,8 +244,6 @@ module KBDatapath #(
 			elTime <= 0;
 		end
 		else begin
-
-			// Jumping
 			if (kbData == 8'h1D) begin
 				if (!jumping) begin
 					height <= 16'd10;
@@ -273,9 +273,68 @@ module KBDatapath #(
 				jumping <= 0;
 				elTime <= 0;
 			end
+		end
+	end
 
+	// Pause
+	always@(posedge Clock)
+	begin
+		if(!reset) begin
+			pause <= 1'b0;
+		end
+		else begin
+			if (kbData == 8'h76) begin
+				if (!ld_pause) begin
+					if (ld_game) begin
+						pause <= 1'b1;
+					end
+				end
+				else begin
+					pause <= 1'b0;
+				end
+			end
+		end
+	end
 
+	// Return
+	always@(posedge Clock)
+	begin
+		if(!reset) begin
+			return <= 1'b0;
+		end
+		else begin
+			if (kbData == 8'h29) begin
+				if (ld_score) begin
+					return <= 1'b1;
+				end
+				else begin
+					return <= 1'b0;
+				end
+			end
+			else begin
+				return <= 1'b0;
+			end
+		end
+	end
 
+	// View Score
+	always@(posedge Clock)
+	begin
+		if(!reset) begin
+			viewScore <= 1'b0;
+		end
+		else begin
+			if (kbData == 8'h16) begin
+				if (ld_menu) begin
+					viewScore <= 1'b1;
+				end
+				else begin
+					viewScore <= 1'b0;
+				end
+			end
+			else begin
+				viewScore <= 1'b0;
+			end
 		end
 	end
 
