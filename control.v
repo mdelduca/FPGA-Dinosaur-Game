@@ -1,28 +1,98 @@
+module FSM #(
+	parameter CLOCK_FREQUENCY = 25000000
 
-module control(
-input Clock,
-input viewScore,
-input return,
-input play,
-input jump,
-input gen,
-input lose,
-input pause,
-input reset,
-
-
-output reg ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause
+) (
+	input Clock,
+	input reset,
+	inout PS2_CLK,
+	inout PS2_DAT
 );
 
-reg [5:0] currentState, nextState;
+	wire viewScore, return, play, jumping, gen, lose, pause;
+	wire [7:0] kbData;
+	wire ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause;
 
-	localparam  MENU	       		 		= 5'd0,
+
+	control control(
+		.Clock(Clock),
+		.reset(reset),
+		.viewScore(viewScore),
+		.return(return),
+		.play(play),
+		.jumping(jumping),
+		.gen(gen),
+		.lose(lose),
+		.pause(pause),
+		.ld_menu(ld_menu), 
+		.ld_score(ld_score), 
+		.ld_play(ld_play), 
+		.reset_game(reset_game), 
+		.load_game(load_game), 
+		.ld_generate(ld_generate), 
+		.ld_game(ld_game), 
+		.calc_jump(calc_jump), 
+		.create_obs(create_obs), 
+		.calc_hs(calc_hs),
+		.ld_pause(ld_pause)
+	);
+
+	KBDatapath #(.CLOCK_FREQUENCY(CLOCK_FREQUENCY))KBDatapath(
+		.Clock(Clock),
+		.reset(reset),
+		.viewScore(viewScore),
+		.return(return),
+		.play(play),
+		.jumping(jumping),
+		.gen(gen),
+		.lose(lose),
+		.pause(pause),
+		.ld_menu(ld_menu), 
+		.ld_score(ld_score), 
+		.ld_play(ld_play), 
+		.reset_game(reset_game), 
+		.load_game(load_game), 
+		.ld_generate(ld_generate), 
+		.ld_game(ld_game), 
+		.calc_jump(calc_jump), 
+		.create_obs(create_obs), 
+		.calc_hs(calc_hs),
+		.ld_pause(ld_pause),
+		.kbData(kbData)
+	);
+
+	keyboard #(.CLOCK_FREQUENCY(CLOCK_FREQUENCY))keyboard(
+		.Clock(Clock), 
+		.reset(reset), 
+		.PS2_CLK(PS2_CLK), 
+		.PS2_DAT(PS2_DAT), 
+		.heldData(kbData)
+	);
+endmodule
+
+module control(
+	input Clock,
+	input reset,
+	input viewScore,
+	input return,
+	input play,
+	input jumping,
+	input gen,
+	input lose,
+	input pause,
+
+
+	output reg ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause
+);
+
+	reg [5:0] currentState, nextState;
+
+	localparam  	MENU	       		 	= 5'd0,
 					S_SCORE		   			= 5'd1,
 					S_PLAY		 		    = 5'd2,
 					S_RESET		 		    = 5'd3,
 					S_LOAD					= 5'd4,
 					S_GENERATE_SCREEN		= 5'd5,
-					s_GAME					= 5'd6,
+					S_GAME					= 5'd6,
 					S_JUMP					= 5'd7,
 					S_OBSTACLE				= 5'd8,
 					S_CALC_HS				= 5'd9,
@@ -32,7 +102,7 @@ reg [5:0] currentState, nextState;
 		case (currentState)
 		
 			MENU: begin
-							if (score) nextState = S_SCORE;
+							if (viewScore) nextState = S_SCORE;
 							else if (play) nextState = S_PLAY;
 							else nextState = MENU;
 						end
@@ -42,7 +112,7 @@ reg [5:0] currentState, nextState;
 			S_GENERATE_SCREEN: nextState = S_GAME;
 			S_GAME: begin
 							if (lose) nextState = S_CALC_HS;
-							else if (jump) nextState = S_JUMP;
+							else if (jumping) nextState = S_JUMP;
 							else if (gen) nextState = S_OBSTACLE;
 							else if (pause) nextState = S_PAUSE;
 							else nextState = S_GAME;
@@ -51,7 +121,7 @@ reg [5:0] currentState, nextState;
 			S_OBSTACLE: nextState = gen ? S_OBSTACLE : S_GAME;
 			S_JUMP: begin
 				if (lose) nextState = S_CALC_HS;
-				else if (jump) nextState = S_JUMP;
+				else if (jumping) nextState = S_JUMP;
 				else if (gen) nextState = S_OBSTACLE;
 				else nextState = S_GAME;
 			end
@@ -130,11 +200,83 @@ reg [5:0] currentState, nextState;
 	
 	always@(posedge Clock)
 	begin: state_progression
-		if(reset)
+		if(!reset)
 			currentState <= MENU;
 		else 
 			currentState <= nextState;
 	end
 	
 	
+endmodule
+
+
+module KBDatapath #(
+	parameter CLOCK_FREQUENCY = 25000000
+) (
+	input Clock,
+	input reset,
+	input ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause,
+	input [7:0] kbData,
+
+	output reg viewScore,
+	output reg return,
+	output reg play,
+	output reg jumping,
+	output reg gen,
+	output reg lose,
+	output reg pause
+);
+	reg [15:0]height;
+	reg [15:0]velocity;
+	reg [7:0] counter;
+	reg[$clog2(CLOCK_FREQUENCY):0] elTime;
+
+	//Keyboard input handler
+	always@(posedge Clock)
+	begin
+		if (!reset) begin
+			height <= 16'd10;
+			velocity <= 0;
+			counter <= 0;
+			jumping <= 0;
+			elTime <= 0;
+		end
+		else begin
+
+			// Jumping
+			if (kbData == 8'h1D) begin
+				if (!jumping) begin
+					height <= 16'd10;
+					jumping <= 1'b1;
+					velocity <= 16'd50;
+					counter <= 0;
+				end
+			end
+
+			if (calc_jump && jumping) begin
+				if (elTime != 0) begin 
+					elTime <= elTime - 1;
+				end
+				else begin
+					elTime <= CLOCK_FREQUENCY/4 - 1;
+					counter <= counter + 1;
+					height <= height + (velocity*counter);
+					velocity <= velocity - counter;
+				end
+
+			end
+
+			if (height[15] == 1'b1) begin
+				height <= 16'd10;
+				velocity <= 0;
+				counter <= 0;
+				jumping <= 0;
+				elTime <= 0;
+			end
+
+
+
+		end
+	end
+
 endmodule
