@@ -284,6 +284,35 @@ ____11______________
 
 */
 
+*/
+
+// use height as inputs for dinosaur
+// generate obstacles
+// stop updating pixels when paused
+// view highscore while game is being played
+// create all other screen states
+/*
+
+ld_generate = 1'b1;
+				end
+				
+			S_GAME: begin
+				ld_game = 1'b1;
+				end
+				
+			S_JUMP: begin
+				calc_jump = 1'b1;
+				end
+				
+			S_OBSTACLE: begin
+				create_obs = 1'b1;
+				end
+				
+			S_PAUSE: begin
+				ld_pause = 1'b1;
+
+*/
+
 module SquareAnimation(	
 		CLOCK_50,						//	On Board 50 MHz
 		SW, 								// On Board Switches
