@@ -52,7 +52,7 @@ module keyboard #(
 	PS2_Controller PS2 (
 	// Inputs
 	.CLOCK_50			(Clock),
-	.reset				(reset),
+	.reset				(!reset),
 
 	// Bidirectionals
 	.PS2_CLK			(PS2_CLK),

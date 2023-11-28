@@ -22,7 +22,7 @@ module Altera_UP_PS2_Data_In (
 	// Bidirectionals
 
 	// Outputs
-	received_data, heldData, pressedData,
+	received_data,
 	received_data_en, flag			// If 1 - new data has been received
 );
 
@@ -49,7 +49,7 @@ input			 	ps2_data;
 // Bidirectionals
 
 // Outputs
-output reg	[7:0]	received_data, heldData, pressedData;
+output reg	[7:0]	received_data;
 
 output reg		 	received_data_en;
 reg[7:0] prevData;

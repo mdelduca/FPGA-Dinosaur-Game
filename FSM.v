@@ -5,14 +5,20 @@ module FSM #(
 	input Clock,
 	input reset,
 	inout PS2_CLK,
-	inout PS2_DAT
+	inout PS2_DAT,
+	input kill,
+
+	output viewScore, return, play, jumping, gen, lose, pause,
+	output [7:0] kbData,
+	output [5:0] currentState, nextState,
+	output [15:0]height,
+	output [15:0]velocity,
+	output [7:0] counter,
+	output [$clog2(CLOCK_FREQUENCY):0] elTime,
+	output ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause,
+	output pauseFlag
+
 );
-
-	wire viewScore, return, play, jumping, gen, lose, pause;
-	wire [7:0] kbData;
-	wire ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause;
-
-
 	control control(
 		.Clock(Clock),
 		.reset(reset),
@@ -33,7 +39,9 @@ module FSM #(
 		.calc_jump(calc_jump), 
 		.create_obs(create_obs), 
 		.calc_hs(calc_hs),
-		.ld_pause(ld_pause)
+		.ld_pause(ld_pause),
+		.currentState(currentState),
+		.nextState(nextState)
 	);
 
 	KBDatapath #(.CLOCK_FREQUENCY(CLOCK_FREQUENCY))KBDatapath(
@@ -57,7 +65,13 @@ module FSM #(
 		.create_obs(create_obs), 
 		.calc_hs(calc_hs),
 		.ld_pause(ld_pause),
-		.kbData(kbData)
+		.kbData(kbData),
+		.height(height),
+		.velocity(velocity),
+		.counter(counter),
+		.elTime(elTime),
+		.pauseFlag(pauseFlag),
+		.kill(kill)
 	);
 
 	keyboard #(.CLOCK_FREQUENCY(CLOCK_FREQUENCY))keyboard(
@@ -79,12 +93,13 @@ module control(
 	input gen,
 	input lose,
 	input pause,
+	
+	output reg [5:0] currentState, nextState,
+
 
 
 	output reg ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause
 );
-
-	reg [5:0] currentState, nextState;
 
 	localparam  	MENU	       		 	= 5'd0,
 					S_SCORE		   			= 5'd1,
@@ -217,6 +232,7 @@ module KBDatapath #(
 	input reset,
 	input ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause,
 	input [7:0] kbData,
+	input kill,
 
 	output reg viewScore,
 	output reg return,
@@ -224,12 +240,15 @@ module KBDatapath #(
 	output reg jumping,
 	output reg gen,
 	output reg lose,
-	output reg pause
+	output reg pause,
+	output reg [15:0]height,
+	output reg [15:0]velocity,
+	output reg [7:0] counter,
+	output reg[$clog2(CLOCK_FREQUENCY):0] elTime,
+	output reg pauseFlag
+
+
 );
-	reg [15:0]height;
-	reg [15:0]velocity;
-	reg [7:0] counter;
-	reg[$clog2(CLOCK_FREQUENCY):0] elTime;
 
 	//Keyboard input handlers
 	
@@ -244,8 +263,16 @@ module KBDatapath #(
 			elTime <= 0;
 		end
 		else begin
-			if (kbData == 8'h1D) begin
-				if (!jumping) begin
+			if (kill) begin
+				lose <= 1'b1;
+			end else begin
+				lose <= 1'b0;
+			end
+			if (kbData == 8'h29) begin
+				if (!(ld_game || calc_jump)) begin
+					jumping <= 1'b0;
+				end
+				else if (!jumping) begin
 					height <= 16'd10;
 					jumping <= 1'b1;
 					velocity <= 16'd50;
@@ -275,26 +302,39 @@ module KBDatapath #(
 			end
 		end
 	end
-
+	
 	// Pause
 	always@(posedge Clock)
 	begin
 		if(!reset) begin
 			pause <= 1'b0;
+			pauseFlag <= 1'b0;
 		end
 		else begin
 			if (kbData == 8'h76) begin
 				if (!ld_pause) begin
 					if (ld_game) begin
-						pause <= 1'b1;
+						pauseFlag <= 1'b1;
 					end
 				end
-				else begin
+				if (ld_pause) begin
+					pauseFlag <= 1'b1;
+				end
+			end
+			
+			if (kbData == 8'h00) begin
+				if (ld_pause && pauseFlag) begin
+					pauseFlag <= 1'b0;
 					pause <= 1'b0;
+				end
+				else if (pauseFlag) begin
+					pauseFlag <= 1'b0;
+					pause <= 1'b1;
 				end
 			end
 		end
 	end
+
 
 	// Return
 	always@(posedge Clock)
@@ -303,7 +343,7 @@ module KBDatapath #(
 			return <= 1'b0;
 		end
 		else begin
-			if (kbData == 8'h29) begin
+			if (kbData == 8'h59) begin
 				if (ld_score) begin
 					return <= 1'b1;
 				end
@@ -338,4 +378,25 @@ module KBDatapath #(
 		end
 	end
 
+		// Play
+	always@(posedge Clock)
+	begin
+		if(!reset) begin
+			play <= 1'b0;
+		end
+		else begin
+			if (kbData == 8'h5A) begin
+				if (ld_menu) begin
+					play <= 1'b1;
+				end
+				else begin
+					play <= 1'b0;
+				end
+			end
+			else begin
+				play <= 1'b0;
+			end
+		end
+	end
+	
 endmodule
