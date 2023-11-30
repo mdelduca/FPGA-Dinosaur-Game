@@ -199,62 +199,62 @@ assign disp = currentState == 5'd1 ? highScore : score;
 
 Hexadecimal_To_Seven_Segment Segment0 (
 	// Inputs
-	.hex_number			(disp[3:0]),
+	.c			(height[3:0]),
 
 	// Bidirectional
 
 	// Outputs
-	.seven_seg_display	(HEX0)
+	.display	(HEX0)
 );
 
 Hexadecimal_To_Seven_Segment Segment1 (
 	// Inputs
-	.hex_number			(disp[7:4]),
+	.c			(height[7:4]),
 
 	// Bidirectional
 
 	// Outputs
-	.seven_seg_display	(HEX1)
+	.display	(HEX1)
 );
 
 Hexadecimal_To_Seven_Segment Segment2 (
 	// Inputs
-	.hex_number			(disp[11:8]),
+	.c			(height[11:8]),
 
 	// Bidirectional
 
 	// Outputs
-	.seven_seg_display	(HEX2)
+	.display	(HEX2)
 );
 
 Hexadecimal_To_Seven_Segment Segment3 (
 	// Inputs
-	.hex_number			(disp[15:12]),
+	.c			(height[15:12]),
 
 	// Bidirectional
 
 	// Outputs
-	.seven_seg_display	(HEX3)
+	.display	(HEX3)
 );
 
 Hexadecimal_To_Seven_Segment Segment4 (
 	// Inputs
-	.hex_number			(scoreAddress[3:0]),
+	.c			(currentState[3:0]),
 
 	// Bidirectional
 
 	// Outputs
-	.seven_seg_display	(HEX4)
+	.display	(HEX4)
 );
 
 Hexadecimal_To_Seven_Segment Segment5 (
 	// Inputs
-	.hex_number			(scoreAddress[7:4]),
+	.c			(scoreAddress[3:0]),
 
 	// Bidirectional
 
 	// Outputs
-	.seven_seg_display	(HEX5)
+	.display	(HEX5)
 );
 
 

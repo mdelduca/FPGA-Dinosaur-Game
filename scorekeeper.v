@@ -35,6 +35,14 @@ module scorekeeper #(
 			scoreKeepTime <= 0;
 		end
 		highScoreAddress <= 1'b0;
+		if (reset_game) begin
+			writeEnS <= 1'b1;
+		end
+		
+		if (load_game) begin
+			score <= 0;
+		end
+		
 		if (ld_game || calc_jump) begin
 			writeEnS <= 1'b1;
 			if (scoreKeepTime != 0) begin 
@@ -63,12 +71,14 @@ module scorekeeper #(
 		end
 	end
 	
-	always@(negedge calc_hs) begin
-		if (scoreAddress[8] != 1) begin
-			scoreAddress <= scoreAddress + 1;
-		end
-		else begin
-			scoreAddress <= 0;
+	always@(posedge ld_play) begin
+		if (!ld_pause) begin
+			if (scoreAddress[8] != 1) begin
+				scoreAddress <= scoreAddress + 1;
+			end
+			else begin
+				scoreAddress <= 0;
+			end
 		end
 	end
 

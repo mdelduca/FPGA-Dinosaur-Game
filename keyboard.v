@@ -8,6 +8,7 @@ module keyboard #(
 	inout PS2_DAT,
 
 	output reg[7:0]	heldData
+
 );
 
 	// Wire connections to PS2_controller
@@ -17,8 +18,9 @@ module keyboard #(
 
 	// Internal Registers
 	reg			[7:0]	last_data_received;
-	reg 				flag;
+	reg flag;
 
+	
 	// Take in data
 	always @(posedge Clock)
 	begin
@@ -51,16 +53,16 @@ module keyboard #(
 
 	PS2_Controller PS2 (
 	// Inputs
-	.CLOCK_50			(Clock),
-	.reset				(!reset),
+	.Clock			(Clock),
+	.reset				(reset),
 
 	// Bidirectionals
 	.PS2_CLK			(PS2_CLK),
  	.PS2_DAT			(PS2_DAT),
 
 	// Outputs
-	.received_data		(ps2_key_data),
-	.received_data_en	(ps2_key_pressed)
+	.transmit		(ps2_key_data),
+	.keyPressed	(ps2_key_pressed)
 	);
 
 	

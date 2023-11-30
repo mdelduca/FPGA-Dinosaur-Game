@@ -256,7 +256,7 @@ module KBDatapath #(
 	always@(posedge Clock)
 	begin
 		if (!reset) begin
-			height <= 16'd10;
+			height <= 16'd150;
 			velocity <= 0;
 			counter <= 0;
 			jumping <= 0;
@@ -273,9 +273,9 @@ module KBDatapath #(
 					jumping <= 1'b0;
 				end
 				else if (!jumping) begin
-					height <= 16'd10;
+					height <= 16'd150;
 					jumping <= 1'b1;
-					velocity <= 16'd50;
+					velocity <= 16'd7;
 					counter <= 0;
 				end
 			end
@@ -287,14 +287,14 @@ module KBDatapath #(
 				else begin
 					elTime <= CLOCK_FREQUENCY/4 - 1;
 					counter <= counter + 1;
-					height <= height + (velocity*counter);
+					height <= height - (velocity*counter);
 					velocity <= velocity - counter;
 				end
 
 			end
 
-			if (height[15] == 1'b1) begin
-				height <= 16'd10;
+			if (height > 16'd150) begin
+				height <= 16'd150;
 				velocity <= 0;
 				counter <= 0;
 				jumping <= 0;
