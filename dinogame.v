@@ -4,6 +4,7 @@ module dinogame (
 	CLOCK_50,
 	KEY,
 	LEDR,
+	SW,
 
 	// Bidirectionals
 	PS2_CLK,
@@ -33,6 +34,7 @@ parameter CLOCK_FREQUENCY = 25000000;
 // Inputs
 input				CLOCK_50;
 input		[3:0]	KEY;
+input		[9:0] SW;
 
 // Bidirectionals
 inout				PS2_CLK;
@@ -195,11 +197,11 @@ scorekeeper #(
 
 );
 
-assign disp = currentState == 5'd1 ? highScore : score;
+assign disp = (currentState != 5'd1) ? SW[0] ? height : score : highScore;
 
 Hexadecimal_To_Seven_Segment Segment0 (
 	// Inputs
-	.c			(height[3:0]),
+	.c			(disp[3:0]),
 
 	// Bidirectional
 
@@ -209,7 +211,7 @@ Hexadecimal_To_Seven_Segment Segment0 (
 
 Hexadecimal_To_Seven_Segment Segment1 (
 	// Inputs
-	.c			(height[7:4]),
+	.c			(disp[7:4]),
 
 	// Bidirectional
 
@@ -219,7 +221,7 @@ Hexadecimal_To_Seven_Segment Segment1 (
 
 Hexadecimal_To_Seven_Segment Segment2 (
 	// Inputs
-	.c			(height[11:8]),
+	.c			(disp[11:8]),
 
 	// Bidirectional
 
@@ -229,7 +231,7 @@ Hexadecimal_To_Seven_Segment Segment2 (
 
 Hexadecimal_To_Seven_Segment Segment3 (
 	// Inputs
-	.c			(height[15:12]),
+	.c			(disp[15:12]),
 
 	// Bidirectional
 
