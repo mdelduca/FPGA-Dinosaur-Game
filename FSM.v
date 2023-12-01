@@ -11,7 +11,7 @@ module FSM #(
 	output viewScore, return, play, jumping, gen, lose, pause,
 	output [7:0] kbData,
 	output [5:0] currentState, nextState,
-	output [15:0]height,
+	output [15:0]height, nextHeight,
 	output [15:0]velocity,
 	output [7:0] counter,
 	output [$clog2(CLOCK_FREQUENCY):0] elTime,
@@ -67,6 +67,7 @@ module FSM #(
 		.ld_pause(ld_pause),
 		.kbData(kbData),
 		.height(height),
+		.nextHeight(nextHeight),
 		.velocity(velocity),
 		.counter(counter),
 		.elTime(elTime),
@@ -241,7 +242,7 @@ module KBDatapath #(
 	output reg gen,
 	output reg lose,
 	output reg pause,
-	output reg [15:0]height,
+	output reg [15:0]height, nextHeight,
 	output reg [15:0]velocity,
 	output reg [7:0] counter,
 	output reg[$clog2(CLOCK_FREQUENCY):0] elTime,
@@ -256,7 +257,8 @@ module KBDatapath #(
 	always@(posedge Clock)
 	begin
 		if (!reset) begin
-			height <= 16'd150;
+			height <= 16'd110;
+			nextHeight <= 16'd110
 			velocity <= 0;
 			counter <= 0;
 			jumping <= 0;
@@ -273,9 +275,10 @@ module KBDatapath #(
 					jumping <= 1'b0;
 				end
 				else if (!jumping) begin
-					height <= 16'd150;
+					height <= 16'd110;
+					nextHeight <= 16'd110
 					jumping <= 1'b1;
-					velocity <= 16'd7;
+					velocity <= 16'd8;
 					counter <= 0;
 				end
 			end
@@ -285,16 +288,18 @@ module KBDatapath #(
 					elTime <= elTime - 1;
 				end
 				else begin
-					elTime <= CLOCK_FREQUENCY/4 - 1;
+					elTime <= CLOCK_FREQUENCY/6 - 1;
 					counter <= counter + 1;
-					height <= height - (velocity*counter);
+					height <= nextHeight;
+					nextHeight <= nextHeight - (velocity*counter);
 					velocity <= velocity - counter;
 				end
 
 			end
 
-			if (height > 16'd150) begin
-				height <= 16'd150;
+			if (nextHeight > 16'd110) begin
+				height <= 16'd110;
+				nextHeight <= 16'd110;
 				velocity <= 0;
 				counter <= 0;
 				jumping <= 0;

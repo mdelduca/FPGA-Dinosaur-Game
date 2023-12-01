@@ -45,7 +45,7 @@ module keyboard #(
 				heldData <= 0;
 			end
 			if (ps2_key_pressed == 1'b1) flag <= 1'b1;
-			if	(last_data_received == 8'hF0) flag <= 1'b0;
+			if	(last_data_received == 8'hF0 || last_data_received == 8'hE0) flag <= 1'b0;
 		end
 
 	end

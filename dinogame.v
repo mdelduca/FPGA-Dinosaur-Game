@@ -19,7 +19,16 @@ module dinogame (
 	HEX5,
 	HEX6,
 	HEX7,
-	disp
+	disp,
+	
+	VGA_CLK,   						//	VGA Clock
+	VGA_HS,							//	VGA H_SYNC
+	VGA_VS,							//	VGA V_SYNC
+	VGA_BLANK_N,						//	VGA BLANK
+	VGA_SYNC_N,						//	VGA SYNC
+	VGA_R,   						//	VGA Red[9:0]
+	VGA_G,	 						//	VGA Green[9:0]
+	VGA_B   						//	VGA Blue[9:0]
 );
 
 /*****************************************************************************
@@ -51,6 +60,23 @@ output		[6:0]	HEX6;
 output		[6:0]	HEX7;
 output		[9:0] LEDR;
 output [31:0] disp;
+
+output			VGA_CLK;   				//	VGA Clock
+output			VGA_HS;					//	VGA H_SYNC
+output			VGA_VS;					//	VGA V_SYNC
+output			VGA_BLANK_N;				//	VGA BLANK
+output			VGA_SYNC_N;				//	VGA SYNC
+output	[7:0]	VGA_R;   				//	VGA Red[7:0] Changed from 10 to 8-bit DAC
+output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
+output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
+
+	
+// Create the colour, x, y and writeEn wires that are inputs to the controller.
+
+wire [2:0] colour;
+wire [7:0] x;
+wire [6:0] y;
+wire writeEn;
 /*****************************************************************************
  *                 Internal Wires and Registers Declarations                 *
  *****************************************************************************/
@@ -75,6 +101,7 @@ wire[8:0] scoreAddress;
 wire highScoreAddress;
 wire writeEnS, writeEnHS;
 wire kill;
+wire nextHeight;
 
 // State Machine Registers
 
@@ -158,7 +185,8 @@ FSM #(
 	.counter(counter),
 	.elTime(elTime),
 	.pauseFlag(pauseFlag),
-	.kill(kill)
+	.kill(kill),
+	.nextHeight(nextHeight)
 );
 
 scorekeeper #(
@@ -197,6 +225,30 @@ scorekeeper #(
 
 );
 
+
+part2 part2
+	(
+		.CLOCK_50(CLOCK_50),						//	On Board 50 MHz
+		// Your inputs and outputs here
+		.KEY(KEY),		// On Board Keys
+		.SW(SW),
+		.LEDR(LEDR),
+//		.HEX0(HEX0),
+//		.HEX1(HEX1),
+//		.HEX2(HEX2),
+//		.HEX3(HEX3),
+		// The ports below are for the VGA output.  Do not change.
+		.VGA_CLK(VGA_CLK),   						//	VGA Clock
+		.VGA_HS(VGA_HS),							//	VGA H_SYNC
+		.VGA_VS(VGA_VS),							//	VGA V_SYNC
+		.VGA_BLANK_N(VGA_BLANK_N),						//	VGA BLANK
+		.VGA_SYNC_N(VGA_SYNC_N),						//	VGA SYNC
+		.VGA_R(VGA_R),   						//	VGA Red[9:0]
+		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
+		.VGA_B(VGA_B),   						//	VGA Blue[9:0]
+		.height(height)
+	);
+	
 assign disp = (currentState != 5'd1) ? SW[0] ? height : score : highScore;
 
 Hexadecimal_To_Seven_Segment Segment0 (

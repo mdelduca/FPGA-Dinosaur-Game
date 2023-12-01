@@ -7,6 +7,7 @@ module PS2_Controller(
 	inout PS2_DAT,
 
 
+//		 ld_start, ld_data, ld_parity, ld_end,
 	output	reg[7:0] transmit,
 	output	reg keyPressed
 
@@ -20,6 +21,7 @@ module PS2_Controller(
 	reg currPS2CLK;
 
 	reg rawData;
+//	reg[7:0] transmit;
 	reg start;
 	reg parity;
 	reg stop;
