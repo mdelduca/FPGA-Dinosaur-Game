@@ -37,6 +37,7 @@ module scorekeeper #(
 	end
 
 	assign posedgeLoadPlay = (currentLoad == 1'b1 && prevLoad == 1'b0);
+	assign negedgeLoadPlay = (currentLoad == 1'b0 && prevLoad == 1'b1);
 
 	always@(posedge Clock)
 	begin
@@ -49,7 +50,6 @@ module scorekeeper #(
 			if (!ld_pause && !incremented) begin
 				if (scoreAddress != 8'b11111111) begin
 					scoreAddress <= scoreAddress + 1;
-					incremented <= 1'b1;
 				end
 				else begin
 					scoreAddress <= 0;
@@ -57,9 +57,10 @@ module scorekeeper #(
 			end
 		end
 
-		if (reset_game)
+		else if (negedgeLoadPlay)
 		begin
-			incremented <= 1'b0;
+			if (incremented) incremented <= 1'b0;
+			else if (!incremented) incremented <= 1'b1;
 		end
 	end
 
