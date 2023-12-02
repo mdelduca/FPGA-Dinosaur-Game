@@ -227,7 +227,8 @@ endmodule
 
 
 module KBDatapath #(
-	parameter CLOCK_FREQUENCY = 25000000
+	parameter CLOCK_FREQUENCY = 25000000,
+	parameter FPS = 1200000
 ) (
 	input Clock,
 	input reset,
@@ -252,7 +253,7 @@ module KBDatapath #(
 );
 
 	//Keyboard input handlers
-	
+	reg[21:0] jumpTimer;
 	// Jumping
 	always@(posedge Clock)
 	begin
@@ -263,6 +264,7 @@ module KBDatapath #(
 			counter <= 0;
 			jumping <= 0;
 			elTime <= 0;
+			jumpTimer <= 0;
 		end
 		else begin
 			if (kill) begin
@@ -278,7 +280,7 @@ module KBDatapath #(
 					height <= 16'd110;
 					nextHeight <= 16'd110;
 					jumping <= 1'b1;
-					velocity <= 16'd8;
+					velocity <= 16'd6;
 					counter <= 0;
 				end
 			end
@@ -290,11 +292,17 @@ module KBDatapath #(
 				else begin
 					elTime <= CLOCK_FREQUENCY/6 - 1;
 					counter <= counter + 1;
-					height <= nextHeight;
-					nextHeight <= nextHeight - (velocity*counter);
 					velocity <= velocity - counter;
 				end
 
+				if (jumpTimer != 0) begin 
+					jumpTimer <= jumpTimer - 1;
+				end
+				else begin
+					jumpTimer <= 21'd1199999;
+					height <= nextHeight;
+					nextHeight <= nextHeight - (velocity*counter);
+				end
 			end
 
 			if (nextHeight > 16'd110) begin
@@ -304,6 +312,7 @@ module KBDatapath #(
 				counter <= 0;
 				jumping <= 0;
 				elTime <= 0;
+				jumpTimer <= 0;
 			end
 		end
 	end
