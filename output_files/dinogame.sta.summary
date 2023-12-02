@@ -1,0 +1,261 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1100mV 85C Model Setup 'FSM:FSM|control:control|currentState[0]'
+Slack : -5.368
+TNS   : -48.308
+
+Type  : Slow 1100mV 85C Model Setup 'CLOCK_50'
+Slack : -4.684
+TNS   : -642.014
+
+Type  : Slow 1100mV 85C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : -4.208
+TNS   : -32.048
+
+Type  : Slow 1100mV 85C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : -2.111
+TNS   : -12.853
+
+Type  : Slow 1100mV 85C Model Setup 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 31.495
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'CLOCK_50'
+Slack : -2.927
+TNS   : -10.619
+
+Type  : Slow 1100mV 85C Model Hold 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.393
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.619
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'FSM:FSM|control:control|currentState[0]'
+Slack : 0.646
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 2.895
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'FSM:FSM|control:control|currentState[0]'
+Slack : -0.394
+TNS   : -4.631
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.338
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 0.380
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.874
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.780
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Setup 'FSM:FSM|control:control|currentState[0]'
+Slack : -5.387
+TNS   : -48.479
+
+Type  : Slow 1100mV 0C Model Setup 'CLOCK_50'
+Slack : -4.408
+TNS   : -563.107
+
+Type  : Slow 1100mV 0C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : -4.302
+TNS   : -32.861
+
+Type  : Slow 1100mV 0C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : -2.134
+TNS   : -12.648
+
+Type  : Slow 1100mV 0C Model Setup 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 31.828
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'CLOCK_50'
+Slack : -2.974
+TNS   : -10.814
+
+Type  : Slow 1100mV 0C Model Hold 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.372
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.536
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'FSM:FSM|control:control|currentState[0]'
+Slack : 0.637
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 2.910
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'FSM:FSM|control:control|currentState[0]'
+Slack : -0.394
+TNS   : -4.617
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.349
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 0.384
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.823
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.754
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Setup 'CLOCK_50'
+Slack : -3.364
+TNS   : -462.867
+
+Type  : Fast 1100mV 85C Model Setup 'FSM:FSM|control:control|currentState[0]'
+Slack : -2.936
+TNS   : -26.424
+
+Type  : Fast 1100mV 85C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : -2.086
+TNS   : -15.660
+
+Type  : Fast 1100mV 85C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : -0.724
+TNS   : -3.666
+
+Type  : Fast 1100mV 85C Model Setup 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 33.749
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'CLOCK_50'
+Slack : -1.452
+TNS   : -5.126
+
+Type  : Fast 1100mV 85C Model Hold 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.221
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'FSM:FSM|control:control|currentState[0]'
+Slack : 0.335
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.367
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 1.829
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'FSM:FSM|control:control|currentState[0]'
+Slack : 0.160
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.363
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 0.400
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.790
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.891
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Setup 'FSM:FSM|control:control|currentState[0]'
+Slack : -2.781
+TNS   : -25.029
+
+Type  : Fast 1100mV 0C Model Setup 'CLOCK_50'
+Slack : -2.665
+TNS   : -357.546
+
+Type  : Fast 1100mV 0C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : -2.021
+TNS   : -15.237
+
+Type  : Fast 1100mV 0C Model Setup 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : -0.583
+TNS   : -2.667
+
+Type  : Fast 1100mV 0C Model Setup 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 34.552
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'CLOCK_50'
+Slack : -1.416
+TNS   : -5.071
+
+Type  : Fast 1100mV 0C Model Hold 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.198
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'FSM:FSM|control:control|currentState[0]'
+Slack : 0.303
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.320
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 1.803
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'FSM:FSM|control:control|currentState[0]'
+Slack : 0.162
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState.DONE'
+Slack : 0.386
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currPS2CLK'
+Slack : 0.413
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.783
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'part2|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.889
+TNS   : 0.000
+
+------------------------------------------------------------

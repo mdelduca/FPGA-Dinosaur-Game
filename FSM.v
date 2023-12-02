@@ -258,7 +258,7 @@ module KBDatapath #(
 	begin
 		if (!reset) begin
 			height <= 16'd110;
-			nextHeight <= 16'd110
+			nextHeight <= 16'd110;
 			velocity <= 0;
 			counter <= 0;
 			jumping <= 0;
