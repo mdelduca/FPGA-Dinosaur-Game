@@ -299,7 +299,7 @@ module KBDatapath #(
 					jumpTimer <= jumpTimer - 1;
 				end
 				else begin
-					jumpTimer <= 21'd1199999;
+					jumpTimer <= 21'833333;
 					height <= nextHeight;
 					nextHeight <= nextHeight - (velocity*counter);
 				end
