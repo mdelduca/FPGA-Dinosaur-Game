@@ -50,6 +50,7 @@ module scorekeeper #(
 			if (!ld_pause && !incremented) begin
 				if (scoreAddress != 8'b11111111) begin
 					scoreAddress <= scoreAddress + 1;
+					incremented <= 1'b1;
 				end
 				else begin
 					scoreAddress <= 0;
@@ -57,10 +58,9 @@ module scorekeeper #(
 			end
 		end
 
-		else if (negedgeLoadPlay)
+		if (negedgeLoadPlay)
 		begin
-			if (incremented) incremented <= 1'b0;
-			else if (!incremented) incremented <= 1'b1;
+			incremented <= 1'b0;
 		end
 	end
 
