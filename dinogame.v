@@ -248,7 +248,10 @@ part2 part2
 		.height(height)
 	);
 	
-assign disp = (currentState != 5'd1) ? SW[0] ? height : score : highScore;
+assign disp = (currentState != 5'd1) && SW[0] ? height : 
+			  (currentState != 5'd1) && !SW[0] ? readScore : 
+			  (currentState == 5'd1) && SW[0] ? readHS :
+			  readScore;
 
 Hexadecimal_To_Seven_Segment Segment0 (
 	// Inputs
