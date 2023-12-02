@@ -87,7 +87,7 @@ wire viewScore, return, play, jumping, gen, lose, pause;
 wire [7:0] kbData;
 wire ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause;
 wire [5:0] currentState, nextState;
-wire [15:0]height;
+wire [15:0]height, nextHeight;
 wire [15:0]velocity;
 wire [7:0] counter;
 wire [$clog2(CLOCK_FREQUENCY):0] elTime;
@@ -101,7 +101,6 @@ wire[8:0] scoreAddress;
 wire highScoreAddress;
 wire writeEnS, writeEnHS;
 wire kill;
-wire nextHeight;
 
 // State Machine Registers
 
