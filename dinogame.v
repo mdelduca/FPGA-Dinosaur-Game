@@ -97,7 +97,7 @@ wire[$clog2(CLOCK_FREQUENCY):0] scoreKeepTime;
 wire[31:0] score, highScore;
 
 wire[31:0] readScore, readHS;
-wire[8:0] scoreAddress;
+wire[7:0] scoreAddress;
 wire highScoreAddress;
 wire writeEnS, writeEnHS;
 wire kill;

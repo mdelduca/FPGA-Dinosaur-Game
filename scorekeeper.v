@@ -18,7 +18,7 @@ module scorekeeper #(
 	output reg [31:0] score, highScore,
 
 	output [31:0] readScore, readHS,
-	output reg [8:0] scoreAddress,
+	output reg [7:0] scoreAddress,
 	output reg highScoreAddress,
 	output reg writeEnS, writeEnHS
 
@@ -73,7 +73,7 @@ module scorekeeper #(
 	
 	always@(posedge ld_play) begin
 		if (!ld_pause) begin
-			if (scoreAddress[8] != 1) begin
+			if (scoreAddress != 8'b11111111) begin
 				scoreAddress <= scoreAddress + 1;
 			end
 			else begin
