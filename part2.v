@@ -11,6 +11,8 @@ module part2(
 		VGA_G,	 						//	VGA Green[9:0]
 		VGA_B,   						   //	VGA Blue[9:0]
 		height,
+		oX,
+		oY
 	);
 
 	input		    CLOCK_50;			//	50 MHz
@@ -25,27 +27,26 @@ module part2(
 	output [7:0] VGA_R;   			//	VGA Red[7:0] Changed from 10 to 8-bit DAC
 	output [7:0] VGA_G;	 			//	VGA Green[7:0]
 	output [7:0] VGA_B;   			//	VGA Blue[7:0]
-	
-	wire resetn;
+	wire resetn, reset;
 	assign resetn = KEY[0];
 	
-	// Create the colour, x, y and writeEn wires that are inputs to the controller.
+	// dino colour, x and y pixels, and signals
 	wire [2:0] dinoColour;
+	wire [7:0] dinoX;
+	wire [6:0] dinoY;
+	wire dinoGo, dinoErase, dinoPlotEn, dinoUpdate, dinoReset, dinoSignal;
+	
+	// obstacle colour, x and y pixels, and signals
 	wire [2:0] obstacleColour;
+	wire [7:0] obstacleX;
+	wire [6:0] obstacleY;
+	wire obstacleGo, obstacleErase, obstaclePlotEn, obstacleUpdate, obstacleReset, obstacleSignal;
+	
+	// vga colour, x and y pixels, and signals
 	wire [2:0] vgaColour;
 	wire [7:0] vgaX;
 	wire [6:0] vgaY;
-	wire [7:0] dinoX;
-	wire [6:0] dinoY;
-	wire [7:0] obstacleX;
-	wire [6:0] obstacleY;
-	
-	// Put your code here. Your code should produce signals x,y,colour and writeEn
-	// for the VGA controller, in addition to any other functionality your design may require.
-	wire dinoGo, dinoErase, dinoPlotEn, dinoUpdate, dinoReset;
-	wire obstacleGo, obstacleErase, obstaclePlotEn, obstacleUpdate, obstacleReset;
-	wire reset;
-	assign resetn = KEY[0];
+	wire vgaGo;
 	
 	// dino global variables
 	wire [5:0] dinoPlotCounter;
@@ -59,14 +60,15 @@ module part2(
 	wire [6:0] obstacleYCounter;
 	wire [25:0] obstacleFreq;
 
+	output[7:0] oX, oY;
 	// Create an Instance of a VGA controller 
 	vga_adapter VGA(
 			.resetn(resetn),
 			.clock(CLOCK_50),
-			.colour(obstacleColour),
-			.x(obstacleX),
-			.y(obstacleY),
-			.plot(obstacleGo),
+			.colour(vgaColour),
+			.x(vgaX),
+			.y(vgaY),
+			.plot(vgaGo),
 			.VGA_R(VGA_R),
 			.VGA_G(VGA_G),
 			.VGA_B(VGA_B),
@@ -74,18 +76,19 @@ module part2(
 			.VGA_VS(VGA_VS),
 			.VGA_BLANK(VGA_BLANK_N),
 			.VGA_SYNC(VGA_SYNC_N),
-			.VGA_CLK(VGA_CLK));
+			.VGA_CLK(VGA_CLK)
+			);
 		defparam VGA.RESOLUTION = "160x120";
 		defparam VGA.MONOCHROME = "FALSE";
 		defparam VGA.BITS_PER_COLOUR_CHANNEL = 1;
 		defparam VGA.BACKGROUND_IMAGE = "black.mif";
 			
-//	dinoControlpath c(CLOCK_50, resetn, dinoPlotCounter, 
-//					  dinoXCounter, dinoYCounter, dinoFreq,
-//					  dinoGo, dinoErase, dinoUpdate, dinoPlotEn, dinoReset);
-//	
-//	dinoDataPath d(CLOCK_50, resetn, dinoPlotEn, dinoGo, dinoErase, dinoUpdate, dinoReset, SW[2:0], 
-//				  dinoX, dinoY, dinoColour, dinoPlotCounter, dinoXCounter, dinoYCounter, dinoFreq, height, nextHeight);
+	dinoControlpath c(CLOCK_50, resetn, dinoPlotCounter, 
+					  dinoXCounter, dinoYCounter, dinoFreq,
+					  dinoGo, dinoErase, dinoUpdate, dinoPlotEn, dinoReset);
+	
+	dinoDataPath d(CLOCK_50, resetn, dinoPlotEn, dinoGo, dinoErase, dinoUpdate, dinoReset, SW[2:0], 
+				  dinoX, dinoY, dinoColour, dinoPlotCounter, dinoXCounter, dinoYCounter, dinoFreq, dinoSignal, height, nextHeight, obstacleX, obstacleY, obstaclePlotEn, oX, oY);
 				 
 	
 	obstacleControlpath e(CLOCK_50, resetn, obstaclePlotCounter, 
@@ -93,9 +96,10 @@ module part2(
 					  obstacleGo, obstacleErase, obstacleUpdate, obstaclePlotEn, obstacleReset);
 	
 	obstacleDataPath l(CLOCK_50, resetn, obstaclePlotEn, obstacleGo, obstacleErase, obstacleUpdate, obstacleReset, SW[2:0], 
-				  obstacleX, obstacleY, obstacleColour, obstaclePlotCounter, obstacleXCounter, obstacleYCounter, obstacleFreq, height, nextHeight);
+				  obstacleX, obstacleY, obstacleColour, obstaclePlotCounter, obstacleXCounter, obstacleYCounter, obstacleFreq, obstacleSignal, height, nextHeight);
 				  
-//	combinedOut(.clk(CLOCK_50), .colour(colour), .go(go), .obstacleOPlot(obstaclePlotEn),.dinoOPlot(dinoPlotEn), .obstacleX(obstacleX), .obstacleY(obstacleY), .dinoX(dinoX), .dinoY(dinoY), .vgaX(vgaX), .vgaY(vgaY), .dinoErase(dinoErase), .obstacleErase(obstacleErase), .reset(reset), .resetn(resetn), .obstacleColour(obstacleColour), .dinoColour(dinoColour));
+	combinedOut(.clk(CLOCK_50), .colour(vgaColour), .go(vgaGo), .obstacleOPlot(obstaclePlotEn),.dinoOPlot(dinoPlotEn), .obstacleX(obstacleX), .obstacleY(obstacleY), .dinoX(dinoX), .dinoY(dinoY), .vgaX(vgaX), .vgaY(vgaY), .dinoErase(dinoErase), .obstacleErase(obstacleErase), .reset(reset), .resetn(resetn), .obstacleColour(obstacleColour), .dinoColour(dinoColour), .dinoSignal(dinoSignal), .obstacleSignal(obstacleSignal));
+	
 endmodule
 
 module dinoControlpath(input clk, resetn,  
@@ -131,7 +135,7 @@ module dinoControlpath(input clk, resetn,
 				else nextSt = UPDATE;
 			end
 			UPDATE: nextSt = DRAW;
-			CLEAR: nextSt = (xCounter == 8'd160 & yCounter == 7'd120) ? RESET : CLEAR;
+			CLEAR: nextSt = (xCounter == 8'd160 && yCounter == 7'd120) ? RESET : CLEAR;
 			default: nextSt = RESET;
 		endcase
 	end 
@@ -183,8 +187,13 @@ module dinoDataPath(input clk, resetn, plotEn, go, erase, update, reset,
 					 output reg [7:0] xCounter,
 					 output reg [6:0] yCounter, 
 					 output reg [25:0] freq,
+					 output reg dinoSignal,
 					 input [15:0] height,
-					 input [15:0] nextheight);
+					 input [15:0] nextheight,
+					 input [7:0] obstacleX,
+					 input [6:0] obstacleY,
+					 input obstaclePlotEn,
+					 output reg[7:0] oX, oY);
 	reg [7:0] xTemp;
 	reg [6:0] yTemp;
 
@@ -192,18 +201,19 @@ module dinoDataPath(input clk, resetn, plotEn, go, erase, update, reset,
 	begin
 		if (reset || !resetn) begin
 			X <= 8'd10;
-			Y <= 7'd10;
+			Y <= 7'd106;
 			xTemp <= 8'd10;
-			yTemp <= 7'd10;
+			yTemp <= 7'd106;
 			plotCounter<= 6'b0;
 			xCounter<= 8'b0;
 			yCounter <= 7'b0;
 			CLR <= 3'b0;
 			freq <= 25'd0;
+			dinoSignal <= 1'b1;
 
 		end
 		else begin
-			if (erase & !plotEn) begin
+			if (!plotEn) begin
 				if (xCounter == 8'd160 && yCounter != 7'd120) begin
 					xCounter <= 8'b0;
 					yCounter <= yCounter + 1;
@@ -216,22 +226,34 @@ module dinoDataPath(input clk, resetn, plotEn, go, erase, update, reset,
 					else CLR <= 3'b0;
 				end
 			end
-			if (!erase) CLR <= 3'b0;
+//			if (!erase) CLR <= 3'b0;
 			
 			if (freq == 26'd833333) freq <= 26'd0;
 			else freq <= freq + 1;
 			
-			if (plotEn) begin
-				if (erase) CLR <= 0;
-				else CLR <= 3'b111;
+			if (plotEn && obstaclePlotEn) begin
+				oX <= xCounter;
+				oY <= yCounter;
+				if (erase) begin
+//					if (xCounter == obstacleX || yCounter == obstacleY) begin
+//						CLR <= 3'b111;
+//					end
+//					else 
+					CLR <= 0;
+					dinoSignal <= 1'b0;
+				end 
+				else begin
+					CLR <= 3'b111;
+					dinoSignal <= 1'b1;
+				end 
 				if (plotCounter == 6'b10000) plotCounter<= 6'b0;
 				else plotCounter <= plotCounter+1;
 				X <= xTemp + plotCounter[1:0];
 				Y <= yTemp + plotCounter[3:2];
 			end
 			if (update) begin
-				Y <= height - 4;
-				yTemp <= height - 4;
+				Y <= height;
+				yTemp <= height;
 			end
 		end
 	end
@@ -270,7 +292,7 @@ module obstacleControlpath(input clk, resetn,
 				else nextSt = UPDATE;
 			end
 			UPDATE: nextSt = DRAW;
-			CLEAR: nextSt = (xCounter == 8'd160 & yCounter == 7'd120) ? RESET : CLEAR;
+			CLEAR: nextSt = (xCounter == 8'd160 && yCounter == 7'd120) ? RESET : CLEAR;
 			default: nextSt = RESET;
 		endcase
 	end 
@@ -322,6 +344,7 @@ module obstacleDataPath(input clk, resetn, plotEn, go, erase, update, reset,
 					 output reg [7:0] xCounter,
 					 output reg [6:0] yCounter, 
 					 output reg [25:0] freq,
+					 output reg obstacleSignal,
 					 input [15:0] height,
 					 input [15:0] nextheight);
 	reg [7:0] xTemp;
@@ -339,10 +362,11 @@ module obstacleDataPath(input clk, resetn, plotEn, go, erase, update, reset,
 			yCounter <= 7'b0;
 			CLR <= 3'b0;
 			freq <= 25'd0;
+			obstacleSignal <= 1'b1;
 
 		end
 		else begin
-			if (erase & !plotEn) begin
+			if (!plotEn) begin
 				if (xCounter == 8'd160 && yCounter != 7'd120) begin
 					xCounter <= 8'b0;
 					yCounter <= yCounter + 1;
@@ -351,19 +375,24 @@ module obstacleDataPath(input clk, resetn, plotEn, go, erase, update, reset,
 					xCounter <= xCounter + 1;
 					X <= xCounter;
 					Y <= yCounter;
-					if (Y == 7'd111) CLR <= 3'b111; 
-					else CLR <= 3'b0;
+					CLR <= 3'b0;
 				end
 			end
-			if (!erase) CLR <= 3'b0;
+//			if (!erase) CLR <= 3'b0;
 			
 			if (freq == 26'd833333) freq <= 26'd0;
 			else freq <= freq + 1;
 			
 			if (plotEn) begin
-				if (erase) CLR <= 0;
-				else CLR <= 3'b111;
-				if (plotCounter == 6'b10000) plotCounter<= 6'b0;
+				if (erase) begin 
+					CLR <= 0;
+					obstacleSignal <= 1'b0;
+				end 
+				else begin
+					CLR <= 3'b111;
+					obstacleSignal <= 1'b1;
+				end 
+				if (plotCounter == 5'b10000) plotCounter<= 6'b0;
 				else plotCounter <= plotCounter+1;
 				X <= xTemp + plotCounter[1:0];
 				Y <= yTemp + plotCounter[3:2];
@@ -371,83 +400,112 @@ module obstacleDataPath(input clk, resetn, plotEn, go, erase, update, reset,
 			if (update) begin
 				X <= X - 1;
 				xTemp <= xTemp - 1;
-				Y <= height;
-				yTemp <= height;
 			end
 		end
 	end
 endmodule
 
-module combinedOut(clk, colour, go, obstacleOPlot,dinoOPlot, obstacleX, obstacleY, dinoX, dinoY, vgaX, vgaY, dinoErase, obstacleErase, reset, resetn, obstacleColour, dinoColour);
-
-	input clk, obstacleOPlot, dinoOPlot, dinoErase, obstacleErase, reset, resetn;
-	input [7:0] obstacleX, dinoX;
-	input [6:0] obstacleY, dinoY;
+/*
+module combinedOut(
+	input clk,
+	input colour,
+	output reg go,
+	input obstacleOPlot,
+	input dinoOPlot,
+	input[7:0] obstacleX,
+	input[6:0] obstacleY,
+	input[7:0] dinoX,
+	input[6:0] dinoY,
+	output reg[7:0] vgaX,
+	output reg[6:0]vgaY,
+	output reg dinoErase,
+	output reg obstacleErase,
+	input reset,
+	input resetn,
+	input [2:0] obstacleColour,
+	input [2:0] dinoColour,
+	input dinoSignal,
+	input obstacleSignal
+	);
 	
-	output reg [7:0] vgaX;
-	output reg [6:0] vgaY;
-	output reg go;
-	output reg [2:0] colour, obstacleColour, dinoColour;
+	reg [2:0] currentSt, nextSt;
 	
-	reg [24:0] freq;
+	localparam IDLE = 3'd0,
+				  DRAWD = 3'd1,
+				  WAIT1 = 3'd2,
+				  DRAWO = 3'd3,
+				  WAIT2 = 3'd4,
+				  ERASE = 3'd5;
+				  
 
-	reg [7:0] xTemp, xCounter;
-	reg [6:0] yTemp, yCounter;
-
-	always @(posedge clk) 
+	//State Table
+	always @(*)
 	begin
-		if (reset || !resetn) begin
-			vgaX <= 8'd0;
-			vgaY <= 7'd0;
-			xTemp <= 8'd0;
-			yTemp <= 7'd0;
-			xCounter<= 8'b0;
-			yCounter <= 7'b0;
-			colour <= 3'b0;
-			freq <= 25'd0;
+		case(currentSt)
+			IDLE: nextSt = DRAWD;
+			DRAWD: begin
+				if (!dinoErase) nextSt = DRAWD;
+				else nextSt = WAIT1;
+			end
+			WAIT1: begin
+				if (!dinoOPlot) nextSt = WAIT1;
+				else nextSt = DRAWO;
+			end
+			DRAWO: begin
+				if (!obstacleErase) nextSt = DRAWO;
+				else nextSt = WAIT2;
+			end
+			WAIT2: begin
+				if (!obstacleOPlot) nextSt = WAIT2;
+				else nextSt = ERASE;
+			end
+			ERASE: begin
+				if (!dinoErase && !obstacleErase) nextSt = IDLE;
+				else nextSt = ERASE;
+			end
+		
+			default: nextSt = IDLE;
+		endcase
+	end 
+
+	always@(posedge clk)
+	begin
+		if (currentSt == DRAWD) begin
+			vgaX <= dinoX;
+			vgaY <= dinoY;
+			go <= dinoOPlot;
+		end
+		else if (currentSt == WAIT1) begin
+			go <= dinoOPlot;
+
+		
+		end
+		else if (currentSt == DRAWO) begin
+			vgaX <= obstacleX;
+			vgaY <= obstacleY;
+			go <= obstacleOPlot;
+
+		end
+		else if (currentSt == WAIT2) begin
+			go <= dinoOPlot;
+
+		
+		end
+		else if (currentSt == ERASE) begin
+			vgaX <= dinoX;
+			vgaY <= dinoY;
+			go <= dinoOPlot;
 
 		end
 		else begin
-			if ((dinoErase || obstacleErase) & !(obstacleOPlot || dinoOPlot)) begin
-				if (xCounter == 8'd160 && yCounter != 7'd120) begin
-					xCounter <= 8'b0;
-					yCounter <= yCounter + 1;
-				end
-				else begin
-					xCounter <= xCounter + 1;
-					vgaX <= xCounter;
-					vgaY <= yCounter;
-				end
-			end
-			if (!(dinoErase || obstacleErase)) colour <= 3'b0;
-			
-			if (freq == 26'd833333) freq <= 26'd0;
-			else freq <= freq + 1;
-			
-			if ((obstacleOPlot && dinoOPlot) && (obstacleColour == 3'b111) && (dinoColour == 3'b111)) begin
-				if ((dinoErase || obstacleErase)) colour <= 0;
-				else colour <= 3'b100;
-				vgaX <= xTemp + 1;
-				vgaY <= yTemp + 1;
-				go <= 1'b1;
-			end
-			
-			if (obstacleOPlot) begin
-				if (obstacleErase) colour <= 0;
-				else colour <= 3'b111;
-				vgaX <= obstacleX;
-				vgaY <= obstacleY;
-				go <= 1'b1;
-			end
-			
-			if (dinoOPlot) begin
-				if (dinoErase) colour <= 0;
-				else colour <= 3'b111;
-				vgaX <= dinoX;
-				vgaY <= dinoY;
-				go <= 1'b1;
-			end
+		
 		end
 	end
-
-endmodule 
+	
+	always @(posedge clk)
+   begin
+		if (!resetn) currentSt <= IDLE;
+      else currentSt <= nextSt;
+   end 
+endmodule
+*/

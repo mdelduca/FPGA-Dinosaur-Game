@@ -11,7 +11,7 @@ module FSM #(
 	output viewScore, return, play, jumping, gen, lose, pause,
 	output [7:0] kbData,
 	output [5:0] currentState, nextState,
-	output [15:0]height, nextHeight,
+	output [15:0]height,
 	output [15:0]velocity,
 	output [7:0] counter,
 	output [$clog2(CLOCK_FREQUENCY):0] elTime,
@@ -67,7 +67,6 @@ module FSM #(
 		.ld_pause(ld_pause),
 		.kbData(kbData),
 		.height(height),
-		.nextHeight(nextHeight),
 		.velocity(velocity),
 		.counter(counter),
 		.elTime(elTime),
@@ -227,8 +226,7 @@ endmodule
 
 
 module KBDatapath #(
-	parameter CLOCK_FREQUENCY = 25000000,
-	parameter FPS = 1200000
+	parameter CLOCK_FREQUENCY = 25000000
 ) (
 	input Clock,
 	input reset,
@@ -243,7 +241,7 @@ module KBDatapath #(
 	output reg gen,
 	output reg lose,
 	output reg pause,
-	output reg [15:0]height, nextHeight,
+	output reg [15:0]height,
 	output reg [15:0]velocity,
 	output reg [7:0] counter,
 	output reg[$clog2(CLOCK_FREQUENCY):0] elTime,
@@ -251,24 +249,18 @@ module KBDatapath #(
 
 
 );
-	initial begin
-			height <= 16'd106;
-			nextHeight <= 16'd106;
-	end
-	
+
 	//Keyboard input handlers
-	reg[21:0] jumpTimer;
+	
 	// Jumping
 	always@(posedge Clock)
 	begin
 		if (!reset) begin
-			height <= 16'd106;
-			nextHeight <= 16'd106;
+			height <= 16'd110;
 			velocity <= 0;
 			counter <= 0;
 			jumping <= 0;
 			elTime <= 0;
-			jumpTimer <= 0;
 		end
 		else begin
 			if (kill) begin
@@ -281,10 +273,9 @@ module KBDatapath #(
 					jumping <= 1'b0;
 				end
 				else if (!jumping) begin
-					height <= 16'd106;
-					nextHeight <= 16'd106;
+					height <= 16'd110;
 					jumping <= 1'b1;
-					velocity <= 16'd6;
+					velocity <= 16'd8;
 					counter <= 0;
 				end
 			end
@@ -294,29 +285,20 @@ module KBDatapath #(
 					elTime <= elTime - 1;
 				end
 				else begin
-					elTime <= CLOCK_FREQUENCY/10 - 1;
+					elTime <= CLOCK_FREQUENCY/6 - 1;
 					counter <= counter + 1;
+					height <= height - (velocity*counter);
 					velocity <= velocity - counter;
 				end
 
-				if (jumpTimer != 0) begin 
-					jumpTimer <= jumpTimer - 1;
-				end
-				else begin
-					jumpTimer <= 21'd833333;
-					height <= nextHeight;
-					nextHeight <= nextHeight - (velocity*counter);
-				end
 			end
 
-			if (nextHeight > 16'd106) begin
-				height <= 16'd106;
-				nextHeight <= 16'd106;
+			if (height > 16'd110) begin
+				height <= 16'd110;
 				velocity <= 0;
 				counter <= 0;
 				jumping <= 0;
 				elTime <= 0;
-				jumpTimer <= 0;
 			end
 		end
 	end
@@ -417,4 +399,4 @@ module KBDatapath #(
 		end
 	end
 	
-endmodule 
+endmodule

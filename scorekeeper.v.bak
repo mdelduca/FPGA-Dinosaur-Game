@@ -18,7 +18,7 @@ module scorekeeper #(
 	output reg [31:0] score, highScore,
 
 	output [31:0] readScore, readHS,
-	output reg [7:0] scoreAddress,
+	output reg [8:0] scoreAddress,
 	output reg highScoreAddress,
 	output reg writeEnS, writeEnHS
 
@@ -26,44 +26,6 @@ module scorekeeper #(
 	scoreMemory sm(.address(scoreAddress), .clock(Clock), .data(score), .q(readScore), .wren(writeEnS || !reset));
 	HSMemory hsm(.address(highScoreAddress), .clock(Clock), .data(highScore), .q(readHS), .wren(writeEnHS || !reset));
 	
-	reg currentLoad, prevLoad;
-	wire posedgeLoadPlay;
-	reg incremented;
-
-	always@(posedge Clock)
-	begin
-		prevLoad <= currentLoad;
-		currentLoad <= ld_play;
-	end
-
-	assign posedgeLoadPlay = (currentLoad == 1'b1 && prevLoad == 1'b0);
-	assign negedgeLoadPlay = (currentLoad == 1'b0 && prevLoad == 1'b1);
-
-	always@(posedge Clock)
-	begin
-		if (!reset)
-		begin
-			scoreAddress <= 1'b0;
-			incremented <= 1'b0;
-		end
-		else if (posedgeLoadPlay) begin
-			if (!ld_pause && !incremented) begin
-				if (scoreAddress != 8'b11111111) begin
-					scoreAddress <= scoreAddress + 1;
-					incremented <= 1'b1;
-				end
-				else begin
-					scoreAddress <= 0;
-				end
-			end
-		end
-
-		if (negedgeLoadPlay)
-		begin
-			incremented <= 1'b0;
-		end
-	end
-
 	always@(posedge Clock)
 	begin
 		if (!reset) begin
@@ -109,16 +71,16 @@ module scorekeeper #(
 		end
 	end
 	
-	// always@(posedge ld_play) begin
-	// 	if (!ld_pause) begin
-	// 		if (scoreAddress != 8'b11111111) begin
-	// 			scoreAddress <= scoreAddress + 1;
-	// 		end
-	// 		else begin
-	// 			scoreAddress <= 0;
-	// 		end
-	// 	end
-	// end
+	always@(posedge ld_play) begin
+		if (!ld_pause) begin
+			if (scoreAddress[8] != 1) begin
+				scoreAddress <= scoreAddress + 1;
+			end
+			else begin
+				scoreAddress <= 0;
+			end
+		end
+	end
 
 
 

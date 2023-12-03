@@ -5,17 +5,10 @@ module dinogame (
 	KEY,
 	LEDR,
 	SW,
-	AUD_ADCDAT,
 
 	// Bidirectionals
 	PS2_CLK,
 	PS2_DAT,
-	
-	AUD_BCLK,
-	AUD_ADCLRCK,
-	AUD_DACLRCK,
-
-	FPGA_I2C_SDAT,
 	
 	// Outputs
 	HEX0,
@@ -35,11 +28,7 @@ module dinogame (
 	VGA_SYNC_N,						//	VGA SYNC
 	VGA_R,   						//	VGA Red[9:0]
 	VGA_G,	 						//	VGA Green[9:0]
-	VGA_B,   						//	VGA Blue[9:0]
-	
-	AUD_XCK,
-	AUD_DACDAT,
-	FPGA_I2C_SCLK
+	VGA_B   						//	VGA Blue[9:0]
 );
 
 /*****************************************************************************
@@ -55,16 +44,10 @@ parameter CLOCK_FREQUENCY = 25000000;
 input				CLOCK_50;
 input		[3:0]	KEY;
 input		[9:0] SW;
-input				AUD_ADCDAT;
 
 // Bidirectionals
 inout				PS2_CLK;
 inout				PS2_DAT;
-inout				AUD_BCLK;
-inout				AUD_ADCLRCK;
-inout				AUD_DACLRCK;
-
-inout				FPGA_I2C_SDAT;
 
 // Outputs
 output		[6:0]	HEX0;
@@ -87,11 +70,6 @@ output	[7:0]	VGA_R;   				//	VGA Red[7:0] Changed from 10 to 8-bit DAC
 output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
 output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
 
-output			AUD_XCK;
-output			AUD_DACDAT;
-
-output			FPGA_I2C_SCLK;
-
 	
 // Create the colour, x, y and writeEn wires that are inputs to the controller.
 
@@ -109,7 +87,7 @@ wire viewScore, return, play, jumping, gen, lose, pause;
 wire [7:0] kbData;
 wire ld_menu, ld_score, ld_play, reset_game, load_game, ld_generate, ld_game, calc_jump, create_obs, calc_hs, ld_pause;
 wire [5:0] currentState, nextState;
-wire [15:0]height, nextHeight;
+wire [15:0]height;
 wire [15:0]velocity;
 wire [7:0] counter;
 wire [$clog2(CLOCK_FREQUENCY):0] elTime;
@@ -123,8 +101,6 @@ wire[8:0] scoreAddress;
 wire highScoreAddress;
 wire writeEnS, writeEnHS;
 wire kill;
-wire[7:0] obsX;
-wire[7:0] obsY;
 
 // State Machine Registers
 
@@ -208,8 +184,7 @@ FSM #(
 	.counter(counter),
 	.elTime(elTime),
 	.pauseFlag(pauseFlag),
-	.kill(kill),
-	.nextHeight(nextHeight)
+	.kill(kill)
 );
 
 scorekeeper #(
@@ -255,6 +230,7 @@ part2 part2
 		// Your inputs and outputs here
 		.KEY(KEY),		// On Board Keys
 		.SW(SW),
+		.LEDR(LEDR),
 //		.HEX0(HEX0),
 //		.HEX1(HEX1),
 //		.HEX2(HEX2),
@@ -268,39 +244,14 @@ part2 part2
 		.VGA_R(VGA_R),   						//	VGA Red[9:0]
 		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
 		.VGA_B(VGA_B),   						//	VGA Blue[9:0]
-		.height(height),
-		.oX(obsX),
-		.oY(obsY)
+		.height(height)
 	);
-	
-	DE1_SoC_Audio_Example aud(
-	// Inputs
-	.CLOCK_50(CLOCK_50),
-	.KEY(KEY),
-
-	.AUD_ADCDAT(AUD_ADCDAT),
-
-	// Bidirectionals
-	.AUD_BCLK(AUD_BCLK),
-	.AUD_ADCLRCK(AUD_ADCLRCK),
-	.AUD_DACLRCK(AUD_DACLRCK),
-
-	.FPGA_I2C_SDAT(FPGA_I2C_SDAT),
-
-	// Outputs
-	.AUD_XCK(AUD_XCK),
-	.AUD_DACDAT(AUD_DACDAT),
-
-	.FPGA_I2C_SCLK(FPGA_I2C_SCLK),
-	.SW(SW),
-	.kill(kill)
-);
 	
 assign disp = (currentState != 5'd1) ? SW[0] ? height : score : highScore;
 
 Hexadecimal_To_Seven_Segment Segment0 (
 	// Inputs
-	.c			(obsX[3:0]),
+	.c			(disp[3:0]),
 
 	// Bidirectional
 
@@ -310,7 +261,7 @@ Hexadecimal_To_Seven_Segment Segment0 (
 
 Hexadecimal_To_Seven_Segment Segment1 (
 	// Inputs
-	.c			(obsX[7:4]),
+	.c			(disp[7:4]),
 
 	// Bidirectional
 
@@ -320,7 +271,7 @@ Hexadecimal_To_Seven_Segment Segment1 (
 
 Hexadecimal_To_Seven_Segment Segment2 (
 	// Inputs
-	.c			(height[11:8]),
+	.c			(disp[11:8]),
 
 	// Bidirectional
 
@@ -330,7 +281,7 @@ Hexadecimal_To_Seven_Segment Segment2 (
 
 Hexadecimal_To_Seven_Segment Segment3 (
 	// Inputs
-	.c			(obsY[3:0]),
+	.c			(disp[15:12]),
 
 	// Bidirectional
 
@@ -340,7 +291,7 @@ Hexadecimal_To_Seven_Segment Segment3 (
 
 Hexadecimal_To_Seven_Segment Segment4 (
 	// Inputs
-	.c			(obsY[7:4]),
+	.c			(currentState[3:0]),
 
 	// Bidirectional
 
