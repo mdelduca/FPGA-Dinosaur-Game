@@ -124,21 +124,19 @@ module control(
 						end
 			S_PLAY: nextState = S_RESET;
 			S_RESET: nextState = S_LOAD;
-			S_LOAD: nextState = S_GENERATE_SCREEN;
+			S_LOAD: nextState = S_OBSTACLE;
+			S_OBSTACLE: nextState = S_GENERATE_SCREEN;
 			S_GENERATE_SCREEN: nextState = S_GAME;
 			S_GAME: begin
 							if (lose) nextState = S_CALC_HS;
 							else if (jumping) nextState = S_JUMP;
-							else if (gen) nextState = S_OBSTACLE;
 							else if (pause) nextState = S_PAUSE;
 							else nextState = S_GAME;
 						end
 			
-			S_OBSTACLE: nextState = gen ? S_OBSTACLE : S_GAME;
 			S_JUMP: begin
 				if (lose) nextState = S_CALC_HS;
 				else if (jumping) nextState = S_JUMP;
-				else if (gen) nextState = S_OBSTACLE;
 				else nextState = S_GAME;
 			end
 			
@@ -251,13 +249,17 @@ module KBDatapath #(
 
 
 );
-
+	initial begin
+			height <= 16'd106;
+			nextHeight <= 16'd106;
+	end
+	
 	//Keyboard input handlers
 	reg[21:0] jumpTimer;
 	// Jumping
 	always@(posedge Clock)
 	begin
-		if (!reset) begin
+		if (!reset || ld_menu) begin
 			height <= 16'd106;
 			nextHeight <= 16'd106;
 			velocity <= 0;

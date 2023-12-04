@@ -95,7 +95,7 @@ module scorekeeper #(
 			writeEnS <= 1'b0;
 		end
 		
-		if (!(ld_game || calc_jump) && !writeEnS) begin
+		if (!(ld_game || calc_jump || ld_pause) && !writeEnS) begin
 			score <= 0;
 		end
 		if (calc_hs) begin

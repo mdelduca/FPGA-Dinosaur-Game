@@ -5,10 +5,17 @@ module dinogame (
 	KEY,
 	LEDR,
 	SW,
+	AUD_ADCDAT,
 
 	// Bidirectionals
 	PS2_CLK,
 	PS2_DAT,
+	
+	AUD_BCLK,
+	AUD_ADCLRCK,
+	AUD_DACLRCK,
+
+	FPGA_I2C_SDAT,
 	
 	// Outputs
 	HEX0,
@@ -28,7 +35,11 @@ module dinogame (
 	VGA_SYNC_N,						//	VGA SYNC
 	VGA_R,   						//	VGA Red[9:0]
 	VGA_G,	 						//	VGA Green[9:0]
-	VGA_B   						//	VGA Blue[9:0]
+	VGA_B,   						//	VGA Blue[9:0]
+	
+	AUD_XCK,
+	AUD_DACDAT,
+	FPGA_I2C_SCLK
 );
 
 /*****************************************************************************
@@ -44,10 +55,16 @@ parameter CLOCK_FREQUENCY = 25000000;
 input				CLOCK_50;
 input		[3:0]	KEY;
 input		[9:0] SW;
+input				AUD_ADCDAT;
 
 // Bidirectionals
 inout				PS2_CLK;
 inout				PS2_DAT;
+inout				AUD_BCLK;
+inout				AUD_ADCLRCK;
+inout				AUD_DACLRCK;
+
+inout				FPGA_I2C_SDAT;
 
 // Outputs
 output		[6:0]	HEX0;
@@ -69,6 +86,11 @@ output			VGA_SYNC_N;				//	VGA SYNC
 output	[7:0]	VGA_R;   				//	VGA Red[7:0] Changed from 10 to 8-bit DAC
 output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
 output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
+
+output			AUD_XCK;
+output			AUD_DACDAT;
+
+output			FPGA_I2C_SCLK;
 
 	
 // Create the colour, x, y and writeEn wires that are inputs to the controller.
@@ -97,7 +119,7 @@ wire[$clog2(CLOCK_FREQUENCY):0] scoreKeepTime;
 wire[31:0] score, highScore;
 
 wire[31:0] readScore, readHS;
-wire[7:0] scoreAddress;
+wire[8:0] scoreAddress;
 wire highScoreAddress;
 wire writeEnS, writeEnHS;
 wire kill;
@@ -113,7 +135,7 @@ wire kill;
  *                             Sequential Logic                              *
  *****************************************************************************/
 
-assign kill = ~KEY[3];
+//assign kill = ~KEY[3];
 //assign LEDR[8] = kbData == 8'h1C;
 //assign LEDR[7] = kbData == 8'h0;
 //assign LEDR[6] = jumping == 1'b1;
@@ -231,7 +253,6 @@ part2 part2
 		// Your inputs and outputs here
 		.KEY(KEY),		// On Board Keys
 		.SW(SW),
-		.LEDR(LEDR),
 //		.HEX0(HEX0),
 //		.HEX1(HEX1),
 //		.HEX2(HEX2),
@@ -245,14 +266,49 @@ part2 part2
 		.VGA_R(VGA_R),   						//	VGA Red[9:0]
 		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
 		.VGA_B(VGA_B),   						//	VGA Blue[9:0]
-		.height(height)
+		.height(height),
+		.ld_menu(ld_menu), 
+		.ld_score(ld_score), 
+		.ld_play(ld_play), 
+		.reset_game(reset_game), 
+		.load_game(load_game), 
+		.ld_generate(ld_generate), 
+		.ld_game(ld_game), 
+		.calc_jump(calc_jump), 
+		.create_obs(create_obs), 
+		.calc_hs(calc_hs),
+		.ld_pause(ld_pause),
+		.kill(kill)
 	);
+	
+	DE1_SoC_Audio_Example aud(
+	// Inputs
+	.CLOCK_50(CLOCK_50),
+	.KEY(KEY),
+
+	.AUD_ADCDAT(AUD_ADCDAT),
+
+	// Bidirectionals
+	.AUD_BCLK(AUD_BCLK),
+	.AUD_ADCLRCK(AUD_ADCLRCK),
+	.AUD_DACLRCK(AUD_DACLRCK),
+
+	.FPGA_I2C_SDAT(FPGA_I2C_SDAT),
+
+	// Outputs
+	.AUD_XCK(AUD_XCK),
+	.AUD_DACDAT(AUD_DACDAT),
+
+	.FPGA_I2C_SCLK(FPGA_I2C_SCLK),
+	.SW(SW),
+	.kill(kill),
+	.jumping(jumping)
+);
 	
 assign disp = (currentState != 5'd1) && SW[0] ? height : 
 			  (currentState != 5'd1) && !SW[0] ? readScore : 
 			  (currentState == 5'd1) && SW[0] ? readHS :
 			  readScore;
-
 Hexadecimal_To_Seven_Segment Segment0 (
 	// Inputs
 	.c			(disp[3:0]),
@@ -312,7 +368,6 @@ Hexadecimal_To_Seven_Segment Segment5 (
 	// Outputs
 	.display	(HEX5)
 );
-
 
 
 endmodule
