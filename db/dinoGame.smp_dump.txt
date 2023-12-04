@@ -1,0 +1,22 @@
+
+State Machine - |dinogame|DE1_SoC_Audio_Example:aud|avconf:avc|mSetup_ST
+Name mSetup_ST.0000 mSetup_ST.0010 mSetup_ST.0001 
+mSetup_ST.0000 0 0 0 
+mSetup_ST.0001 1 0 1 
+mSetup_ST.0010 1 1 0 
+
+State Machine - |dinogame|FSM:FSM|keyboard:keyboard|PS2_Controller:PS2|currentState
+Name currentState.DATA7 currentState.DATA6 currentState.DATA5 currentState.DATA4 currentState.DATA3 currentState.DATA2 currentState.DATA1 currentState.DATA0 currentState.DONE currentState.STOP currentState.PARITY currentState.DATA currentState.IDLE 
+currentState.IDLE 0 0 0 0 0 0 0 0 0 0 0 0 0 
+currentState.DATA 0 0 0 0 0 0 0 0 0 0 0 1 1 
+currentState.PARITY 0 0 0 0 0 0 0 0 0 0 1 0 1 
+currentState.STOP 0 0 0 0 0 0 0 0 0 1 0 0 1 
+currentState.DONE 0 0 0 0 0 0 0 0 1 0 0 0 1 
+currentState.DATA0 0 0 0 0 0 0 0 1 0 0 0 0 1 
+currentState.DATA1 0 0 0 0 0 0 1 0 0 0 0 0 1 
+currentState.DATA2 0 0 0 0 0 1 0 0 0 0 0 0 1 
+currentState.DATA3 0 0 0 0 1 0 0 0 0 0 0 0 1 
+currentState.DATA4 0 0 0 1 0 0 0 0 0 0 0 0 1 
+currentState.DATA5 0 0 1 0 0 0 0 0 0 0 0 0 1 
+currentState.DATA6 0 1 0 0 0 0 0 0 0 0 0 0 1 
+currentState.DATA7 1 0 0 0 0 0 0 0 0 0 0 0 1 
