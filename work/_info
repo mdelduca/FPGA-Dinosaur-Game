@@ -1,0 +1,191 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/agrim/Downloads/game/game
+vctrl
+Z1 !s110 1701481711
+!i10b 1
+!s100 D[IIfKjblKaKV]IP4MJoV3
+I@<a^beD7<]?KVCUN^eNla1
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z3 w1701481343
+Z4 8part2.v
+Z5 Fpart2.v
+L0 210
+Z6 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z7 !s108 1701481710.000000
+Z8 !s107 part2.v|
+Z9 !s90 -reportprogress|300|part2.v|
+!i113 1
+Z10 tCvgOpt 0
+vdatapath
+R1
+!i10b 1
+!s100 Vi5jE2:9FD`Pni?S`^Old0
+IbS5FB[N0K<n8;6^iE6UVE2
+R2
+R0
+R3
+R4
+R5
+L0 333
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vdrawDino
+R1
+!i10b 1
+!s100 ahH8kj`bd91;hmnnd`FJZ0
+IYLzNH6RMc41dki^E2ghjm1
+R2
+R0
+R3
+R4
+R5
+L0 108
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+ndraw@dino
+vhex_decoder
+R1
+!i10b 1
+!s100 E]R6ZeGI[mUDAAgljP9fY1
+IfMU`WTB<?DamQYm_a_;Qd2
+R2
+R0
+R3
+R4
+R5
+L0 414
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vpart2
+R1
+!i10b 1
+!s100 5U7;F96^7bBo7f;ZQW9Rj3
+IKDjhlKm6E?aD=mkl]6^oz0
+R2
+R0
+R3
+R4
+R5
+L0 9
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vvga_adapter
+Z11 !s110 1701480953
+!i10b 1
+!s100 PR75O15I9dVSi8B4<g5Zb3
+Ij3?UFI>T<TT<XV]g<@_TH2
+R2
+R0
+Z12 w1701478701
+8vga_adapter.v
+Fvga_adapter.v
+L0 78
+R6
+r1
+!s85 0
+31
+Z13 !s108 1701480953.000000
+Z14 !s107 vga_pll.v|vga_adapter.v|vga_address_translator.v|vga_controller.v|part2.v|
+Z15 !s90 -reportprogress|300|part2.v|vga_controller.v|vga_address_translator.v|vga_adapter.v|vga_pll.v|
+!i113 1
+R10
+vvga_address_translator
+R11
+!i10b 1
+!s100 `K`RWO2nRBN_9O[2kR2lY0
+ISLAi:]<6mKHeBkkaO1DFh3
+R2
+R0
+R12
+8vga_address_translator.v
+Fvga_address_translator.v
+L0 4
+R6
+r1
+!s85 0
+31
+R13
+R14
+R15
+!i113 1
+R10
+vvga_controller
+R11
+!i10b 1
+!s100 XbjY46ZEO<fXm::1SHFVi0
+IGX7D@am`LFn0fOEYnA?N13
+R2
+R0
+R12
+8vga_controller.v
+Fvga_controller.v
+L0 9
+R6
+r1
+!s85 0
+31
+R13
+R14
+R15
+!i113 1
+R10
+vvga_pll
+R11
+!i10b 1
+!s100 4XSTjD`VEiamX^n1@5J`b3
+InS4CFLIEOHD9AEaVkoljA1
+R2
+R0
+R12
+8vga_pll.v
+Fvga_pll.v
+L0 36
+R6
+r1
+!s85 0
+31
+R13
+R14
+R15
+!i113 1
+R10
