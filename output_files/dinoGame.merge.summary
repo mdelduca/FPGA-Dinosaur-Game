@@ -1,0 +1,17 @@
+Partition Merge Status : Successful - Sun Dec 03 22:57:04 2023
+Quartus Prime Version : 18.0.0 Build 614 04/24/2018 SJ Standard Edition
+Revision Name : dinoGame
+Top-level Entity Name : dinogame
+Family : Cyclone V
+Logic utilization (in ALMs) : 738 / 32,070 ( 2 % )
+Total registers : 772
+Total pins : 152 / 457 ( 33 % )
+Total virtual pins : 0
+Total block memory bits : 255,008 / 4,065,280 ( 6 % )
+Total DSP Blocks : 1 / 87 ( 1 % )
+Total HSSI RX PCSs : 0
+Total HSSI PMA RX Deserializers : 0
+Total HSSI TX PCSs : 0
+Total HSSI PMA TX Serializers : 0
+Total PLLs : 2 / 6 ( 33 % )
+Total DLLs : 0 / 4 ( 0 % )

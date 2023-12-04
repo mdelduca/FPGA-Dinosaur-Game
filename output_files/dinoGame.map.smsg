@@ -1,0 +1,9 @@
+Info (10281): Verilog HDL Declaration information at SquareAnimation.v(393): object "reset" differs only in case from object "RESET" in the same scope File: C:/DESL/game/game/game/SquareAnimation.v Line: 393
+Info (10281): Verilog HDL Declaration information at SquareAnimation.v(393): object "erase" differs only in case from object "ERASE" in the same scope File: C:/DESL/game/game/game/SquareAnimation.v Line: 393
+Info (10281): Verilog HDL Declaration information at SquareAnimation.v(393): object "update" differs only in case from object "UPDATE" in the same scope File: C:/DESL/game/game/game/SquareAnimation.v Line: 393
+Warning (10268): Verilog HDL information at SquareAnimation.v(476): always construct contains both blocking and non-blocking assignments File: C:/DESL/game/game/game/SquareAnimation.v Line: 476
+Info (10281): Verilog HDL Declaration information at SquareAnimation.v(465): object "clr" differs only in case from object "CLR" in the same scope File: C:/DESL/game/game/game/SquareAnimation.v Line: 465
+Warning (10268): Verilog HDL information at PS2.v(96): always construct contains both blocking and non-blocking assignments File: C:/DESL/game/game/game/PS2.v Line: 96
+Info (10281): Verilog HDL Declaration information at PS2.v(16): object "data" differs only in case from object "DATA" in the same scope File: C:/DESL/game/game/game/PS2.v Line: 16
+Info (10281): Verilog HDL Declaration information at PS2.v(26): object "parity" differs only in case from object "PARITY" in the same scope File: C:/DESL/game/game/game/PS2.v Line: 26
+Info (10281): Verilog HDL Declaration information at PS2.v(27): object "stop" differs only in case from object "STOP" in the same scope File: C:/DESL/game/game/game/PS2.v Line: 27
