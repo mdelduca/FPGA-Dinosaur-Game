@@ -1,4 +1,4 @@
-module part2(	
+module screen(	
 		CLOCK_50,						//	On Board 50 MHz
 		SW, 								// On Board Switches
 		KEY,							   // On Board Keys
@@ -192,7 +192,7 @@ module part2(
 		
 			if (vsnegedge) begin
 				bgGo <= 1'b1;
-				obstacleX <= obstacleX - 3;
+				if (!ld_pause) begin obstacleX <= obstacleX - 3; end
 				obstacleY <= obstacleY;
 				if (obstacleX == 159) begin
 					obstacleH <= {obsHC[17:15], 1'b1, obsWC[3]};
@@ -265,6 +265,29 @@ module part2(
 
 						end
 					end
+					
+				else if (ld_pause) begin
+					if (yBG < 7'd120) begin
+						if (xBG < 8'd160) begin
+							if (yBG == 7'd110 || ((xBG >= obstacleX && xBG <= obstacleX + obstacleW) && (yBG >= obstacleY - obstacleH + 3 && yBG <= obstacleY + 3)) || ((xBG >= dinoX && xBG <= dinoX + 3) && (yBG >= dinoY && yBG <= dinoY + 3))) begin
+								col <= 3'b000;
+							end else col <= read3;
+							add3 <= add3 + 1;
+							xBG <= xBG + 1;
+						end
+						else begin
+							xBG <= 0;
+							yBG <= yBG + 1;
+						end
+					end
+					else begin
+						yBG <= 0;
+						add3 <= 0;
+						bgGo <= 1'b0;
+
+					end
+				end
+					
 					else begin
 						if (yBG < 7'd120) begin
 							col <= 0;

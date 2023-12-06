@@ -247,7 +247,7 @@ scorekeeper #(
 );
 
 
-part2 part2
+screen screen
 	(
 		.CLOCK_50(CLOCK_50),						//	On Board 50 MHz
 		// Your inputs and outputs here
@@ -281,7 +281,7 @@ part2 part2
 		.kill(kill)
 	);
 	
-	DE1_SoC_Audio_Example aud(
+	Audio aud(
 	// Inputs
 	.CLOCK_50(CLOCK_50),
 	.KEY(KEY),

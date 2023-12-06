@@ -1,5 +1,5 @@
 
-module DE1_SoC_Audio_Example (
+module Audio (
 	// Inputs
 	CLOCK_50,
 	KEY,
